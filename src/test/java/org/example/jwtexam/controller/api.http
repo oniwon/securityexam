@@ -1,0 +1,16 @@
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "oniwon",
+  "password": "89800"
+}
+
+###
+GET http://localhost:8080/api/authtest
+Cookie: accessToken=
+
+
+###
+# @no-cookie-jar
+GET http://localhost:8080/api/authtest
