@@ -1,6 +1,8 @@
 package org.example.jwtexam.controller;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -94,5 +96,58 @@ public class UserApiController {
     @GetMapping("/api/authtest")
     public String authTest() {
         return "authTest";
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        //할일!!
+        //1. 쿠키로부터 refresh Token을 얻어온다.
+        String refreshToken = null;
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for(Cookie cookie : cookies) {
+                if("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        //2-1. 없을때.
+        //오류로 응답
+        if(refreshToken == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        //2-2. 있을때.
+        //토큰으로부터 정보를 얻어온다.
+        Claims claims = jwtTokenizer.parseRefreshToken(refreshToken);
+        Long userId = Long.valueOf((Integer) claims.get("userId"));
+
+        User user = userService.getUser(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾지 못했습니다."));
+
+
+        //3. accessToken 생성.
+        List roles = (List) claims.get("roles");
+
+
+        String accessToken = jwtTokenizer.createAccessToken(userId, user.getEmail(), user.getName(), user.getUsername(), roles);
+
+        //4. 쿠키 생성 response로 보내고,
+        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(Math.toIntExact(JwtTokenizer.ACCESS_TOKEN_EXPIRE_COUNT / 1000)); // 초 단위로 넘어오니까 밀리로 바꾸기 위해 1000으로 나눔.
+
+        response.addCookie(accessTokenCookie);
+
+        //5. 적절한 응답결과(ResponseEntity)를 생성해서 응답한다.
+        UserLoginResponseDto responseDto = UserLoginResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .name(user.getName())
+                .userId(user.getId())
+                .build();
+
+        return new ResponseEntity(responseDto, HttpStatus.OK);
     }
 }
