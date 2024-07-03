@@ -7,6 +7,25 @@ spring:
 #      name: user
 #      password: 1234
 
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Iv23liRrinN6LvZlRrSi
+            client-secret: 8153d464ed539b7c6118f593d58585c83d600253
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: GitHub
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: id
+
   datasource:
     url: jdbc:mysql://localhost:3306/newDB
     username: oniwon

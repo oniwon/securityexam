@@ -16,27 +16,19 @@ public class JwtTokenizer {
     private final byte[] refreshSecret;
 
     // 토큰 만료 시간 설정 -> ms라서 x1000
-    public static Long ACCESS_TOKEN_EXPIRATION_TIME = 30 * 60 * 1000L;              // 30분
-    public static Long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
+    public static Long ACCESS_TOKEN_EXPIRE_COUNT = 30 * 60 * 1000L;              // 30분
+    public static Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L;    // 7일
 
     /*
         생성자(JwtTokenizer)
         생성자에서 @Value 어노테이션을 통해 주입받은 jwt.secretKey와 jwt.refreshKey를
         UTF-8 인코딩된 바이트 배열로 변환하여 accessSecret 와 refreshSecret 필드에 저장한다.
     */
-    public JwtTokenizer(@Value("${jwt.secretKey}") String accessSecret,
-                        @Value("${jwt.refreshKey}") String refreshSecret) {
+    public JwtTokenizer(@Value("${jwt.secretKey}") String accessSecret, @Value("${jwt.refreshKey}") String refreshSecret){
         this.accessSecret = accessSecret.getBytes(StandardCharsets.UTF_8);
         this.refreshSecret = refreshSecret.getBytes(StandardCharsets.UTF_8);
     }
 
-    /*
-        서명 키 생성 메소드
-        getSigningKey 메서드는 주어진 바이트 배열을 기반으로 HMAC-SHA 알고리즘에 사용할 SecretKey를 생성하여 반환한다.
-    */
-    public static Key getSigningKey(byte[] secretKey) {
-        return Keys.hmacShaKeyFor(secretKey);
-    }
 
     /*
         JWT 생성(createToken 메서드)
@@ -52,8 +44,8 @@ public class JwtTokenizer {
         claims.put("name", name);
         claims.put("userId", id);
         claims.put("roles", roles);
-        claims.put("expire", expire);
-        claims.put("secretKey", secretKey);
+//        claims.put("expire", expire);
+//        claims.put("secretKey", secretKey);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -70,12 +62,20 @@ public class JwtTokenizer {
     */
     // ACCESS Token 생성
     public String createAccessToken(Long id, String email, String name, String username, List<String> roles) {
-        return createToken(id, email, name, username, roles, ACCESS_TOKEN_EXPIRATION_TIME, accessSecret);
+        return createToken(id, email, name, username, roles, ACCESS_TOKEN_EXPIRE_COUNT, accessSecret);
     }
 
     // Refresh Token 생성
     public String createRefreshToken(Long id, String email, String name, String username, List<String> roles) {
-        return createToken(id, email, name, username, roles, REFRESH_TOKEN_EXPIRATION_TIME, refreshSecret);
+        return createToken(id, email, name, username, roles, REFRESH_TOKEN_EXPIRE_COUNT, refreshSecret);
+    }
+
+    /*
+       서명 키 생성 메소드
+       getSigningKey 메서드는 주어진 바이트 배열을 기반으로 HMAC-SHA 알고리즘에 사용할 SecretKey를 생성하여 반환한다.
+   */
+    public static Key getSigningKey(byte[] secretKey) {
+        return Keys.hmacShaKeyFor(secretKey);
     }
 
     // 토큰에서 유저 아이디 얻기

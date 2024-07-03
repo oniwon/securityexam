@@ -16,7 +16,7 @@ import java.util.HashMap;
 @Slf4j
 public class CustomAuthenticationEntityPoint implements AuthenticationEntryPoint {
 
-    // 시큐리티가 인증되지 않은 사용자가 리소스에 접글할 때 동작하게 하는 인터페이스
+    // 시큐리티가 인증되지 않은 사용자가 리소스에 접근할 때 동작하게 하는 인터페이스
     // 사용자가 인증되지 않았을때 어떻게 처리할지 구현
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -27,7 +27,7 @@ public class CustomAuthenticationEntityPoint implements AuthenticationEntryPoint
         if (isRestRequest(request)) {
             handleRestResponse(request, response, exception);
         } else {
-
+            handlePageResponse(request, response, exception);
         }
     }
 
@@ -70,7 +70,6 @@ public class CustomAuthenticationEntityPoint implements AuthenticationEntryPoint
             setResponse(response, JwtExceptionCode.UNKNOWN_ERROR);
         }
     }
-
 
     private void setResponse(HttpServletResponse response, JwtExceptionCode exceptionCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");

@@ -78,12 +78,12 @@ public class UserApiController {
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
         accessTokenCookie.setHttpOnly(true);    // 쿠키를 HTTP 요청에서만 사용할 수 있게 하여 보안을 강화합니다.
         accessTokenCookie.setPath("/");         // 쿠키의 경로 설정
-        accessTokenCookie.setMaxAge(Math.toIntExact(JwtTokenizer.ACCESS_TOKEN_EXPIRATION_TIME / 1000)); // 쿠키의 유지시간의 단위는 초, 토큰의 유지시간의 단위는 밀리초
+        accessTokenCookie.setMaxAge(Math.toIntExact(JwtTokenizer.ACCESS_TOKEN_EXPIRE_COUNT / 1000)); // 쿠키의 유지시간의 단위는 초, 토큰의 유지시간의 단위는 밀리초
 
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(Math.toIntExact(JwtTokenizer.REFRESH_TOKEN_EXPIRATION_TIME / 1000)); // 쿠키의 유지시간의 단위는 초, 토큰의 유지시간의 단위는 밀리초
+        refreshTokenCookie.setMaxAge(Math.toIntExact(JwtTokenizer.REFRESH_TOKEN_EXPIRE_COUNT / 1000)); // 쿠키의 유지시간의 단위는 초, 토큰의 유지시간의 단위는 밀리초
 
         // 응답 객체에 쿠키를 추가
         response.addCookie(accessTokenCookie);
@@ -125,10 +125,8 @@ public class UserApiController {
 
         User user = userService.getUser(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾지 못했습니다."));
 
-
         //3. accessToken 생성.
         List roles = (List) claims.get("roles");
-
 
         String accessToken = jwtTokenizer.createAccessToken(userId, user.getEmail(), user.getName(), user.getUsername(), roles);
 

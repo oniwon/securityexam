@@ -8,9 +8,29 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/api/authtest
-Cookie: accessToken=
+Cookie: accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraEB0ZXN0LmNvbSIsInVzZXJuYW1lIjoicGFyayIsIm5hbWUiOiJraCIsInVzZXJJZCI6NSwicm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE3MTk5MzUwNTQsImV4cCI6MTcxOTkzNjg1NH0.9VzAFH9ZJkRYcLfj9SodleXrV8sraFwjqRocRy0NcEk
 
+###
+GET http://localhost:8080/api/authtest
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraEB0ZXN0LmNvbSIsInVzZXJuYW1lIjoicGFyayIsIm5hbWUiOiJraCIsInVzZXJJZCI6NSwicm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE3MTk5MzUwNTQsImV4cCI6MTcxOTkzNjg1NH0.9VzAFH9ZJkRYcLfj9SodleXrV8sraFwjqRocRy0NcEk
 
 ###
 # @no-cookie-jar
 GET http://localhost:8080/api/authtest
+
+###
+POST http://localhost:8080/api/authtest
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraEB0ZXN0LmNvbSIsInVzZXJuYW1lIjoicGFyayIsIm5hbWUiOiJraCIsInVzZXJJZCI6NSwicm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE3MTk5MzUwNTUsImV4cCI6MTcyMDUzOTg1NX0.2FeiUCFdXO5Ixx-vZjW77oLt9-gScHMArasq-XiCNLA
+
+###
+GET http://localhost:8080/welcome
+Cookie: accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraEB0ZXN0LmNvbSIsInVzZXJuYW1lIjoicGFyayIsIm5hbWUiOiJraCIsInVzZXJJZCI6NSwicm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE3MTk5MzUwNTQsImV4cCI6MTcxOTkzNjg1NH0.9VzAFH9ZJkRYcLfj9SodleXrV8sraFwjqRocRy0NcEk
+
+
+#{
+#    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraEB0ZXN0LmNvbSIsInVzZXJuYW1lIjoicGFyayIsIm5hbWUiOiJraCIsInVzZXJJZCI6NSwicm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE3MTk5MzUwNTQsImV4cCI6MTcxOTkzNjg1NH0.9VzAFH9ZJkRYcLfj9SodleXrV8sraFwjqRocRy0NcEk",
+#    "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraEB0ZXN0LmNvbSIsInVzZXJuYW1lIjoicGFyayIsIm5hbWUiOiJraCIsInVzZXJJZCI6NSwicm9sZXMiOlsiVVNFUiJdLCJpYXQiOjE3MTk5MzUwNTUsImV4cCI6MTcyMDUzOTg1NX0.2FeiUCFdXO5Ixx-vZjW77oLt9-gScHMArasq-XiCNLA",
+#    "userId": 5,
+#    "name": "kh"
+#}
+
