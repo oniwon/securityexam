@@ -25,6 +25,5 @@ public class SocialLoginInfoService {
     @Transactional(readOnly = true)
     public Optional<SocialLoginInfo> findByProviderAndUuidAndSocialId(String provider, String uuid, String socialId){
         return socialLoginInfoRepository.findByProviderAndUuidAndSocialId(provider, uuid, socialId);
-
     }
 }
